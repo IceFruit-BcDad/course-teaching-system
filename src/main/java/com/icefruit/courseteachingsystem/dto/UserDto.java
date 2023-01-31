@@ -20,6 +20,9 @@ public class UserDto {
     @NotNull
     private String name;
 
+    @NotNull
+    private String phoneNumber;
+
     /**
      * 用户类型Id
      */

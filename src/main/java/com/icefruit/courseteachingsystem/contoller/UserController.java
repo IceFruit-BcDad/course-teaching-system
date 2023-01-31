@@ -7,13 +7,15 @@ import com.icefruit.courseteachingsystem.api.DtoList;
 import com.icefruit.courseteachingsystem.api.ListResponse;
 import com.icefruit.courseteachingsystem.auth.AuthConstant;
 import com.icefruit.courseteachingsystem.auth.Authorize;
-import com.icefruit.courseteachingsystem.dto.CourseDto;
-import com.icefruit.courseteachingsystem.dto.CreateCourseRequest;
-import com.icefruit.courseteachingsystem.dto.UserDto;
+import com.icefruit.courseteachingsystem.auth.Sessions;
+import com.icefruit.courseteachingsystem.config.AppProperties;
+import com.icefruit.courseteachingsystem.dto.*;
 import com.icefruit.courseteachingsystem.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,8 +26,11 @@ public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    private final AppProperties appProperties;
+
+    public UserController(UserService userService, AppProperties appProperties) {
         this.userService = userService;
+        this.appProperties = appProperties;
     }
 
     @GetMapping
@@ -44,8 +49,25 @@ public class UserController {
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
             AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
     })
-    public DataResponse<UserDto> create(@RequestBody @Valid CreateCourseRequest request){
-//        UserDto userDto = userService.create(request.getClassificationId(), request.getName());
-        return new DataResponse<>();
+    public DataResponse<UserDto> create(@RequestBody @Valid CreateUserRequest request){
+        UserDto userDto = userService.create(request.getTypeId(), request.getPhoneNumber(),
+                request.getName(), request.getPassword());
+        return new DataResponse<>(userDto);
+    }
+
+    @PostMapping("/verify_password")
+    @Authorize(value = {
+            AuthConstant.AUTHORIZATION_SUPPORT_USER
+    })
+    public DataResponse<UserDto> verifyPassword(@RequestBody @Valid VerifyPasswordRequest request,
+                                                HttpServletResponse response){
+        final UserDto userDto = userService.verifyPassword(request.getPhoneNumber(), request.getPassword());
+        Sessions.loginUser(userDto.getId(),
+                false,
+                true,
+                appProperties.getSigningSecret(),
+                null,
+                response);
+        return new DataResponse<>(userDto);
     }
 }

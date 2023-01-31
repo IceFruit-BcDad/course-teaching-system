@@ -23,6 +23,10 @@ public class User {
 
     private String name;
 
+    private String phoneNumber;
+
+    private String passwordHash;
+
     /**
      * 用户类型Id
      */

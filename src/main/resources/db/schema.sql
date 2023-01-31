@@ -20,10 +20,12 @@ CREATE TABLE IF NOT EXISTS classification
 
 CREATE TABLE IF NOT EXISTS user
 (
-    id          BIGINT AUTO_INCREMENT NOT NULL,
-    name        VARCHAR(255)          NULL,
-    type_id     BIGINT                NOT NULL,
-    create_time datetime              NULL,
+    id            BIGINT AUTO_INCREMENT NOT NULL,
+    name          VARCHAR(255)          NULL,
+    phone_number  VARCHAR(255)          NULL,
+    password_hash VARCHAR(255)          NULL,
+    type_id       BIGINT                NOT NULL,
+    create_time   datetime              NULL,
     CONSTRAINT pk_user PRIMARY KEY (id)
 );
 
