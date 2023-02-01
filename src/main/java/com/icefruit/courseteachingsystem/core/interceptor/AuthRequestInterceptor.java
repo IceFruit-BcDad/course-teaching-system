@@ -5,6 +5,7 @@ import com.github.structlog4j.ILogger;
 import com.github.structlog4j.SLoggerFactory;
 import com.icefruit.courseteachingsystem.auth.AuthConstant;
 import com.icefruit.courseteachingsystem.auth.Sessions;
+import com.icefruit.courseteachingsystem.core.CustomHttpServletRequest;
 import com.icefruit.courseteachingsystem.core.http.RequestData;
 import com.icefruit.courseteachingsystem.crypto.Sign;
 import com.icefruit.courseteachingsystem.error.ServiceException;
@@ -15,8 +16,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpHeaders;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,7 +44,7 @@ public class AuthRequestInterceptor implements PreForwardRequestInterceptor {
     private String setAuthHeader(RequestData data) {
         // default to anonymous web when prove otherwise
         String authorization = AuthConstant.AUTHORIZATION_ANONYMOUS_WEB;
-        HttpHeaders headers = data.getHeaders();
+//        HttpHeaders headers = data.getHeaders();
         Session session = this.getSession(data.getOriginRequest());
         if (session != null) {
             if (session.isSupport()) {
@@ -55,13 +54,15 @@ public class AuthRequestInterceptor implements PreForwardRequestInterceptor {
             }
 
             this.checkBannedUsers(session.getUserId());
-
-            headers.set(AuthConstant.CURRENT_USER_HEADER, session.getUserId());
+            data.getOriginRequest().setHeader(AuthConstant.CURRENT_USER_HEADER, session.getUserId());
+//            headers.set(AuthConstant.CURRENT_USER_HEADER, session.getUserId());
         } else {
             // prevent hacking
-            headers.remove(AuthConstant.CURRENT_USER_HEADER);
+//            headers.remove(AuthConstant.CURRENT_USER_HEADER);
+            data.getOriginRequest().removeHeader(AuthConstant.CURRENT_USER_HEADER);
         }
-        headers.set(AuthConstant.AUTHORIZATION_HEADER, authorization);
+        data.getOriginRequest().setHeader(AuthConstant.AUTHORIZATION_HEADER, authorization);
+//        headers.set(AuthConstant.AUTHORIZATION_HEADER, authorization);
 
         return authorization;
     }

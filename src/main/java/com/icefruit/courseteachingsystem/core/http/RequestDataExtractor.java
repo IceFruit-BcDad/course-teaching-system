@@ -16,7 +16,6 @@ public class RequestDataExtractor {
 
     public byte[] extractBody(HttpServletRequest request) {
         try {
-
             return toByteArray(request.getInputStream());
         } catch (IOException e) {
             throw new ServiceException("Error extracting body of HTTP request with URI: " + extractUri(request), e);

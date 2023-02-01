@@ -44,6 +44,14 @@ public class UserService {
 
     private final ServiceHelper serviceHelper;
 
+    public UserDto get(long userId){
+        final User user = userRepository.findById(userId);
+        if (user == null){
+            throw new ServiceException(ResultCode.NOT_FOUND, "user with specified userId not found");
+        }
+        return convertToDto(user);
+    }
+
     public DtoList<UserDto> list(int offset, int limit){
         if (limit <= 0) {
             limit = 10;

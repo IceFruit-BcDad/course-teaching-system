@@ -1,5 +1,6 @@
 package com.icefruit.courseteachingsystem.core.http;
 
+import com.icefruit.courseteachingsystem.core.CustomHttpServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -13,7 +14,7 @@ public class UnmodifiableRequestData {
     protected String uri;
     protected String host;
     protected HttpHeaders headers;
-    protected HttpServletRequest originRequest;
+    protected CustomHttpServletRequest originRequest;
 
     public UnmodifiableRequestData(RequestData requestData) {
         this(
@@ -29,7 +30,7 @@ public class UnmodifiableRequestData {
                                    String host,
                                    String uri,
                                    HttpHeaders headers,
-                                   HttpServletRequest request
+                                   CustomHttpServletRequest request
     ) {
         this.method = method;
         this.host = host;
@@ -52,6 +53,6 @@ public class UnmodifiableRequestData {
         return headers;
     }
 
-    public HttpServletRequest getOriginRequest() { return this.originRequest; }
+    public CustomHttpServletRequest getOriginRequest() { return this.originRequest; }
 
 }

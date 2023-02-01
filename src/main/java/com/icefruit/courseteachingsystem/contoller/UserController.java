@@ -27,14 +27,8 @@ public class UserController {
 
     private final UserService userService;
 
-    private final EnvConfig envConfig;
-
-    private final AppProperties appProperties;
-
-    public UserController(UserService userService, AppProperties appProperties, EnvConfig envConfig) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.appProperties = appProperties;
-        this.envConfig = envConfig;
     }
 
     @GetMapping
@@ -46,6 +40,16 @@ public class UserController {
         DtoList<UserDto> list = userService.list(offset, limit);
         return new ListResponse<>(list);
 
+    }
+
+    @GetMapping("/{userId}")
+    @Authorize(value = {
+            AuthConstant.AUTHORIZATION_SUPPORT_USER,
+            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+    })
+    public DataResponse<UserDto> getUser(@PathVariable long userId){
+        final UserDto userDto = userService.get(userId);
+        return new DataResponse<>(userDto);
     }
 
     @PostMapping
@@ -65,22 +69,6 @@ public class UserController {
     })
     public DataResponse<UserDto> verifyPassword(@RequestBody @Valid VerifyPasswordRequest request){
         final UserDto userDto = userService.verifyPassword(request.getPhoneNumber(), request.getPassword());
-        return new DataResponse<>(userDto);
-    }
-
-    @PostMapping("/login")
-    @Authorize(value = {
-            AuthConstant.AUTHORIZATION_SUPPORT_USER
-    })
-    public DataResponse<UserDto> login(@RequestBody @Valid VerifyPasswordRequest request,
-                                                HttpServletResponse response){
-        final UserDto userDto = userService.verifyPassword(request.getPhoneNumber(), request.getPassword());
-        Sessions.loginUser(userDto.getId(),
-                false,
-                true,
-                appProperties.getSigningSecret(),
-                envConfig.getExternalApex(),
-                response);
         return new DataResponse<>(userDto);
     }
 }

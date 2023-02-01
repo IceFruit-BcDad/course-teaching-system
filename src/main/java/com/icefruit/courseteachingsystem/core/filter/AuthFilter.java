@@ -2,11 +2,14 @@ package com.icefruit.courseteachingsystem.core.filter;
 
 import com.github.structlog4j.ILogger;
 import com.github.structlog4j.SLoggerFactory;
+import com.icefruit.courseteachingsystem.auth.AuthConstant;
+import com.icefruit.courseteachingsystem.core.CustomHttpServletRequest;
 import com.icefruit.courseteachingsystem.core.http.RequestData;
 import com.icefruit.courseteachingsystem.core.http.RequestDataExtractor;
 import com.icefruit.courseteachingsystem.core.interceptor.PreForwardRequestInterceptor;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
@@ -45,9 +48,8 @@ public class AuthFilter extends OncePerRequestFilter {
 
         HttpHeaders headers = extractor.extractHttpHeaders(request);
         HttpMethod method = extractor.extractHttpMethod(request);
-
-
-        RequestData dataToForward = new RequestData(method, originHost, originUri, headers, request);
+        CustomHttpServletRequest customHttpServletRequest = new CustomHttpServletRequest(request);
+        RequestData dataToForward = new RequestData(method, originHost, originUri, headers, customHttpServletRequest);
         preForwardRequestInterceptor.intercept(dataToForward);
         if (dataToForward.isNeedRedirect() && !isBlank(dataToForward.getRedirectUrl())) {
             log.debug(String.format("Redirecting to -> %s", dataToForward.getRedirectUrl()));
@@ -55,6 +57,6 @@ public class AuthFilter extends OncePerRequestFilter {
             return;
         }
 
-        filterChain.doFilter(request, response);
+        filterChain.doFilter(customHttpServletRequest, response);
     }
 }

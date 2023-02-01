@@ -1,5 +1,6 @@
 package com.icefruit.courseteachingsystem.core.http;
 
+import com.icefruit.courseteachingsystem.core.CustomHttpServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -15,7 +16,7 @@ public class RequestData extends UnmodifiableRequestData {
                        String host,
                        String uri,
                        HttpHeaders headers,
-                       HttpServletRequest request) {
+                       CustomHttpServletRequest request) {
         super(method, host, uri, headers, request);
     }
 
