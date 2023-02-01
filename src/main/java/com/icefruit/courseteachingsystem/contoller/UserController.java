@@ -10,6 +10,7 @@ import com.icefruit.courseteachingsystem.auth.Authorize;
 import com.icefruit.courseteachingsystem.auth.Sessions;
 import com.icefruit.courseteachingsystem.config.AppProperties;
 import com.icefruit.courseteachingsystem.dto.*;
+import com.icefruit.courseteachingsystem.env.EnvConfig;
 import com.icefruit.courseteachingsystem.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -26,11 +27,14 @@ public class UserController {
 
     private final UserService userService;
 
+    private final EnvConfig envConfig;
+
     private final AppProperties appProperties;
 
-    public UserController(UserService userService, AppProperties appProperties) {
+    public UserController(UserService userService, AppProperties appProperties, EnvConfig envConfig) {
         this.userService = userService;
         this.appProperties = appProperties;
+        this.envConfig = envConfig;
     }
 
     @GetMapping
@@ -59,14 +63,23 @@ public class UserController {
     @Authorize(value = {
             AuthConstant.AUTHORIZATION_SUPPORT_USER
     })
-    public DataResponse<UserDto> verifyPassword(@RequestBody @Valid VerifyPasswordRequest request,
+    public DataResponse<UserDto> verifyPassword(@RequestBody @Valid VerifyPasswordRequest request){
+        final UserDto userDto = userService.verifyPassword(request.getPhoneNumber(), request.getPassword());
+        return new DataResponse<>(userDto);
+    }
+
+    @PostMapping("/login")
+    @Authorize(value = {
+            AuthConstant.AUTHORIZATION_SUPPORT_USER
+    })
+    public DataResponse<UserDto> login(@RequestBody @Valid VerifyPasswordRequest request,
                                                 HttpServletResponse response){
         final UserDto userDto = userService.verifyPassword(request.getPhoneNumber(), request.getPassword());
         Sessions.loginUser(userDto.getId(),
                 false,
                 true,
                 appProperties.getSigningSecret(),
-                null,
+                envConfig.getExternalApex(),
                 response);
         return new DataResponse<>(userDto);
     }

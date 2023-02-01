@@ -17,7 +17,7 @@ import jakarta.validation.constraints.Min;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/classification")
+@RequestMapping("/api/course")
 public class CourseController {
 
     static ILogger logger = SLoggerFactory.getLogger(CourseController.class);
