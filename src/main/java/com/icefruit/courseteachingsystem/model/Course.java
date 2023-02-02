@@ -30,4 +30,6 @@ public class Course {
     private Instant createTime;
 
     private Instant lastModifyTime;
+
+    private String coverUrl;
 }

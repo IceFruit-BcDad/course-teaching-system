@@ -1,8 +1,6 @@
 package com.icefruit.courseteachingsystem.dto;
 
-import com.icefruit.courseteachingsystem.validation.PhoneNumber;
 import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,16 +11,18 @@ import org.springframework.util.StringUtils;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class VerifyPasswordRequest {
+public class UpdateUserRequest {
+    private Long typeId;
 
-    @PhoneNumber
     private String phoneNumber;
 
-    @NotBlank
+    private String name;
+
     private String password;
 
-    @AssertTrue(message = "请求无效，用户手机号和密码都不能为空！")
+    @AssertTrue(message = "请求无效，更新用户信息时必须有一个属性不为空！")
     private boolean isValidRequest() {
-        return StringUtils.hasText(phoneNumber) && StringUtils.hasText(password);
+        return typeId != null || StringUtils.hasText(phoneNumber) || StringUtils.hasText(name) ||
+                StringUtils.hasText(password);
     }
 }

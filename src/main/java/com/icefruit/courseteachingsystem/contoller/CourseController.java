@@ -5,12 +5,12 @@ import com.github.structlog4j.SLoggerFactory;
 import com.icefruit.courseteachingsystem.api.DataResponse;
 import com.icefruit.courseteachingsystem.api.DtoList;
 import com.icefruit.courseteachingsystem.api.ListResponse;
+import com.icefruit.courseteachingsystem.api.Response;
 import com.icefruit.courseteachingsystem.auth.AuthConstant;
 import com.icefruit.courseteachingsystem.auth.Authorize;
-import com.icefruit.courseteachingsystem.dto.ClassificationDto;
 import com.icefruit.courseteachingsystem.dto.CourseDto;
-import com.icefruit.courseteachingsystem.dto.CreateClassificationRequest;
 import com.icefruit.courseteachingsystem.dto.CreateCourseRequest;
+import com.icefruit.courseteachingsystem.dto.UpdateCourseRequest;
 import com.icefruit.courseteachingsystem.service.CourseService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -46,7 +46,41 @@ public class CourseController {
             AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
     })
     public DataResponse<CourseDto> create(@RequestBody @Valid CreateCourseRequest request){
-        CourseDto courseDto = courseService.create(request.getClassificationId(), request.getName());
+        CourseDto courseDto = courseService.create(request.getClassificationId(),
+                request.getName(), request.getCoverUrl());
         return new DataResponse<>(courseDto);
+    }
+
+    @GetMapping("/{id}")
+    @Authorize(value = {
+            AuthConstant.AUTHORIZATION_ANONYMOUS_WEB,
+            AuthConstant.AUTHORIZATION_SUPPORT_USER,
+            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+    })
+    public DataResponse<CourseDto> get(@PathVariable long id){
+        final CourseDto courseDto = courseService.get(id);
+        return new DataResponse<>(courseDto);
+    }
+
+    @PutMapping("/{id}")
+    @Authorize(value = {
+            AuthConstant.AUTHORIZATION_SUPPORT_USER,
+            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+    })
+    public DataResponse<CourseDto> update(@PathVariable long id,
+                                                  @RequestBody @Valid UpdateCourseRequest request){
+        final CourseDto courseDto = courseService.update(id, request.getClassificationId(),
+                request.getName(), request.getCoverUrl());
+        return new DataResponse<>(courseDto);
+    }
+
+    @DeleteMapping("/{id}")
+    @Authorize(value = {
+            AuthConstant.AUTHORIZATION_SUPPORT_USER,
+            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+    })
+    public Response delete(@PathVariable long id){
+        courseService.delete(id);
+        return new Response();
     }
 }

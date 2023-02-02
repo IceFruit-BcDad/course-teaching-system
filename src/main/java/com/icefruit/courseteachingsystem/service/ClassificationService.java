@@ -1,13 +1,13 @@
 package com.icefruit.courseteachingsystem.service;
 
 import com.icefruit.courseteachingsystem.api.DtoList;
-import com.icefruit.courseteachingsystem.api.ListResponse;
+import com.icefruit.courseteachingsystem.api.ResultCode;
 import com.icefruit.courseteachingsystem.dto.ClassificationDto;
+import com.icefruit.courseteachingsystem.error.ServiceException;
 import com.icefruit.courseteachingsystem.model.Classification;
 import com.icefruit.courseteachingsystem.repository.ClassificationRepository;
 import com.icefruit.courseteachingsystem.service.helper.ServiceHelper;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.service.spi.ServiceException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
 @RequiredArgsConstructor
@@ -94,6 +93,37 @@ public class ClassificationService {
             throw new ServiceException(errMsg, ex);
         }
 
+        return convertToDto(classification);
+    }
+
+    public ClassificationDto update(long id, int level, String name, Long parentId){
+        final Classification classification = classificationRepository.findById(id);
+        if (classification == null){
+            throw new ServiceException(ResultCode.NOT_FOUND, "未找到此id的分类。");
+        }
+        classification.setLevel(level);
+        classification.setName(name);
+        classification.setParentId(parentId);
+        try {
+            classificationRepository.save(classification);
+        } catch (Exception ex){
+            String errMsg = "更新分类失败";
+            serviceHelper.handleException(logger, ex, errMsg);
+            throw new ServiceException(errMsg, ex);
+        }
+
+        return convertToDto(classification);
+    }
+
+    public void delete(long id){
+        classificationRepository.deleteById(id);
+    }
+
+    public ClassificationDto get(long id){
+        final Classification classification = classificationRepository.findById(id);
+        if (classification == null){
+            throw new ServiceException(ResultCode.NOT_FOUND, "未找到此id的分类。");
+        }
         return convertToDto(classification);
     }
 

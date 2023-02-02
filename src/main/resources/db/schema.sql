@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS course
     create_user_id    BIGINT                NOT NULL,
     create_time       datetime              NULL,
     last_modify_time  datetime              NULL,
+    cover_url         VARCHAR(255)          NULL,
     CONSTRAINT pk_course PRIMARY KEY (id)
 );
 

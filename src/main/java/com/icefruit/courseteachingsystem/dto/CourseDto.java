@@ -32,4 +32,6 @@ public class CourseDto {
 
     @NotNull
     private Instant lastModifyTime;
+
+    private String coverUrl;
 }

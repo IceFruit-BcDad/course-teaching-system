@@ -5,18 +5,13 @@ import com.github.structlog4j.SLoggerFactory;
 import com.icefruit.courseteachingsystem.api.DataResponse;
 import com.icefruit.courseteachingsystem.api.DtoList;
 import com.icefruit.courseteachingsystem.api.ListResponse;
+import com.icefruit.courseteachingsystem.api.Response;
 import com.icefruit.courseteachingsystem.auth.AuthConstant;
 import com.icefruit.courseteachingsystem.auth.Authorize;
-import com.icefruit.courseteachingsystem.auth.Sessions;
-import com.icefruit.courseteachingsystem.config.AppProperties;
 import com.icefruit.courseteachingsystem.dto.*;
-import com.icefruit.courseteachingsystem.env.EnvConfig;
 import com.icefruit.courseteachingsystem.service.UserService;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -70,5 +65,27 @@ public class UserController {
     public DataResponse<UserDto> verifyPassword(@RequestBody @Valid VerifyPasswordRequest request){
         final UserDto userDto = userService.verifyPassword(request.getPhoneNumber(), request.getPassword());
         return new DataResponse<>(userDto);
+    }
+
+    @PutMapping("/{id}")
+    @Authorize(value = {
+            AuthConstant.AUTHORIZATION_SUPPORT_USER,
+            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+    })
+    public DataResponse<UserDto> update(@PathVariable long id,
+                                          @RequestBody @Valid UpdateUserRequest request){
+        final UserDto userDto = userService.update(id, request.getTypeId(),
+                request.getPhoneNumber(), request.getName(), request.getPassword());
+        return new DataResponse<>(userDto);
+    }
+
+    @DeleteMapping("/{id}")
+    @Authorize(value = {
+            AuthConstant.AUTHORIZATION_SUPPORT_USER,
+            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+    })
+    public Response delete(@PathVariable long id){
+        userService.delete(id);
+        return new Response();
     }
 }

@@ -9,6 +9,8 @@ import java.util.List;
 @Repository
 public interface ClassificationRepository extends JpaRepository<Classification, Long> {
 
+    Classification findById(long id);
+
     List<Classification> findClassificationsByLevel(int level);
 
     int countByName(String name);

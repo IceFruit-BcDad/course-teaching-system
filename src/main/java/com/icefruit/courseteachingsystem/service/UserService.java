@@ -2,13 +2,9 @@ package com.icefruit.courseteachingsystem.service;
 
 import com.icefruit.courseteachingsystem.api.DtoList;
 import com.icefruit.courseteachingsystem.api.ResultCode;
-import com.icefruit.courseteachingsystem.auth.AuthContext;
-import com.icefruit.courseteachingsystem.dto.CourseDto;
 import com.icefruit.courseteachingsystem.dto.UserDto;
 import com.icefruit.courseteachingsystem.error.ServiceException;
-import com.icefruit.courseteachingsystem.model.Course;
 import com.icefruit.courseteachingsystem.model.User;
-import com.icefruit.courseteachingsystem.model.UserType;
 import com.icefruit.courseteachingsystem.repository.UserRepository;
 import com.icefruit.courseteachingsystem.repository.UserTypeRepository;
 import com.icefruit.courseteachingsystem.service.helper.ServiceHelper;
@@ -21,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.time.Instant;
 import java.util.List;
@@ -109,6 +104,40 @@ public class UserService {
 
         return convertToDto(user);
     }
+
+    public UserDto update(long id, Long typeId, String phoneNumber, String name, String password){
+        final User user = userRepository.findById(id);
+        if (user == null){
+            throw new com.icefruit.courseteachingsystem.error.ServiceException(ResultCode.NOT_FOUND, "未找到此id的用户。");
+        }
+        if (typeId != null){
+            user.setTypeId(typeId);
+        }
+        if (phoneNumber != null){
+            user.setPhoneNumber(phoneNumber);
+        }
+        if (name != null){
+            user.setName(name);
+        }
+        if (password != null){
+            user.setPasswordHash(passwordEncoder.encode(password));
+        }
+
+        try {
+            userRepository.save(user);
+        } catch (Exception ex){
+            String errMsg = "更新用户信息失败";
+            serviceHelper.handleException(logger, ex, errMsg);
+            throw new com.icefruit.courseteachingsystem.error.ServiceException(errMsg, ex);
+        }
+
+        return convertToDto(user);
+    }
+
+    public void delete(long id){
+        userRepository.deleteById(id);
+    }
+
 
     private UserDto convertToDto(User user) {
         UserDto dto = modelMapper.map(user, UserDto.class);

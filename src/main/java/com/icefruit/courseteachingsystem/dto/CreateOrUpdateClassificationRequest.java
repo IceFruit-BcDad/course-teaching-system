@@ -11,7 +11,7 @@ import org.springframework.util.StringUtils;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CreateClassificationRequest {
+public class CreateOrUpdateClassificationRequest {
 
     private int level;
 
@@ -28,10 +28,6 @@ public class CreateClassificationRequest {
     private boolean isValidRequest2() {
         if (level == 1 && parentId != null){
             return false;
-        } else if (level == 2 && parentId == null){
-            return false;
-        } else {
-            return true;
-        }
+        } else return level != 2 || parentId != null;
     }
 }

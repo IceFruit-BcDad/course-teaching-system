@@ -27,8 +27,9 @@ public class CreateUserRequest {
     @NotBlank
     private String password;
 
-    @AssertTrue(message = "Empty request")
+    @AssertTrue(message = "无效请求，所以参数都不能为空！")
     private boolean isValidRequest() {
-        return typeId != null || StringUtils.hasText(phoneNumber) || StringUtils.hasText(name) || StringUtils.hasText(password);
+        return typeId != null && StringUtils.hasText(phoneNumber) &&
+                StringUtils.hasText(name) && StringUtils.hasText(password);
     }
 }
