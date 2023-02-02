@@ -14,7 +14,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/login")
 public class LoginController {
 
     private final UserService userService;
@@ -29,7 +29,7 @@ public class LoginController {
         this.envConfig = envConfig;
     }
 
-    @PostMapping("/login")
+    @PostMapping
     @Authorize(value = {
             AuthConstant.AUTHORIZATION_ANONYMOUS_WEB,
             AuthConstant.AUTHORIZATION_SUPPORT_USER
@@ -44,20 +44,5 @@ public class LoginController {
                 envConfig.getExternalApex(),
                 response);
         return new DataResponse<>(userDto);
-    }
-
-    @GetMapping("/login_test")
-    @Authorize(value = {
-            AuthConstant.AUTHORIZATION_ANONYMOUS_WEB,
-            AuthConstant.AUTHORIZATION_SUPPORT_USER
-    })
-    public DataResponse<UserDto> loginTest(HttpServletResponse response){
-        Sessions.loginUser(123,
-                false,
-                true,
-                appProperties.getSigningSecret(),
-                envConfig.getExternalApex(),
-                response);
-        return new DataResponse<>();
     }
 }
