@@ -1,5 +1,7 @@
 package com.icefruit.courseteachingsystem.service;
 
+import com.github.structlog4j.ILogger;
+import com.github.structlog4j.SLoggerFactory;
 import com.icefruit.courseteachingsystem.api.DtoList;
 import com.icefruit.courseteachingsystem.api.ResultCode;
 import com.icefruit.courseteachingsystem.auth.AuthContext;
@@ -10,8 +12,6 @@ import com.icefruit.courseteachingsystem.service.helper.ServiceHelper;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.service.spi.ServiceException;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,11 +25,11 @@ import static java.util.stream.Collectors.toList;
 @Service
 @RequiredArgsConstructor
 public class CourseService {
-    static Logger logger = LoggerFactory.getLogger(CourseService.class);
+    static ILogger logger = SLoggerFactory.getLogger(CourseService.class);
 
-    private CourseRepository courseRepository;
+    private final CourseRepository courseRepository;
 
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     private final ServiceHelper serviceHelper;
 

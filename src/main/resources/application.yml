@@ -9,5 +9,10 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: true
+  servlet:
+    multipart:
+      max-request-size: 50MB
+      max-file-size: 50MB
 app:
   signing-secret: ${SIGNING_SECRET}
+  file-save-path: ${FILE_SAVE_PATH}

@@ -16,4 +16,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class AppProperties {
     @NotNull
     private String signingSecret;
+
+    @NotNull
+    private String fileSavePath;
+
+    private String[] supportImgType = new String[]{"jpg", "png"};
 }

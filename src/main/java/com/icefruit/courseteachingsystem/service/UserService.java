@@ -1,5 +1,7 @@
 package com.icefruit.courseteachingsystem.service;
 
+import com.github.structlog4j.ILogger;
+import com.github.structlog4j.SLoggerFactory;
 import com.icefruit.courseteachingsystem.api.DtoList;
 import com.icefruit.courseteachingsystem.api.ResultCode;
 import com.icefruit.courseteachingsystem.dto.UserDto;
@@ -10,8 +12,6 @@ import com.icefruit.courseteachingsystem.repository.UserTypeRepository;
 import com.icefruit.courseteachingsystem.service.helper.ServiceHelper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +27,7 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 public class UserService {
 
-    static Logger logger = LoggerFactory.getLogger(UserService.class);
+    static ILogger logger = SLoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
 

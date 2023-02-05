@@ -1,7 +1,7 @@
 package com.icefruit.courseteachingsystem.service.helper;
 
+import com.github.structlog4j.ILogger;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class ServiceHelper {
 
 
-    public void handleException(Logger log, Exception ex, String errMsg) {
+    public void handleException(ILogger log, Exception ex, String errMsg) {
         log.error(errMsg, ex);
     }
 

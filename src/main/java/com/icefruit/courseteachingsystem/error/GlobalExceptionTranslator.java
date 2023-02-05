@@ -18,6 +18,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.Set;
@@ -55,7 +56,10 @@ public class GlobalExceptionTranslator {
         logger.warn("Method Argument Not Valid", e);
         BindingResult result = e.getBindingResult();
         FieldError error = result.getFieldError();
-        String message = String.format("%s:%s", error.getField(), error.getDefaultMessage());
+        String message = "";
+        if (error != null){
+            message = String.format("%s:%s", error.getField(), error.getDefaultMessage());
+        }
         return Response
                 .builder()
                 .code(ResultCode.PARAM_VALID_ERROR)
@@ -148,6 +152,16 @@ public class GlobalExceptionTranslator {
 //                .message(e.getMessage())
 //                .build();
 //    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public Response handleError(MaxUploadSizeExceededException e) {
+        logger.error("Upload file too large", e);
+        return Response
+                .builder()
+                .code(ResultCode.REQUEST_ENTITY_TOO_LARGE)
+                .message(e.getMessage())
+                .build();
+    }
 
     @ExceptionHandler(Throwable.class)
     public Response handleError(Throwable e) {
