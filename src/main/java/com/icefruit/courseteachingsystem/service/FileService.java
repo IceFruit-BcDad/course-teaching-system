@@ -7,13 +7,10 @@ import com.icefruit.courseteachingsystem.error.ServiceException;
 import com.icefruit.courseteachingsystem.service.helper.ServiceHelper;
 import com.icefruit.courseteachingsystem.utils.FileTypeUtils;
 import com.icefruit.courseteachingsystem.utils.UUIDUtils;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,9 +25,12 @@ public class FileService {
 
     private final ServiceHelper serviceHelper;
 
-    public FileService(AppProperties appProperties, ServiceHelper serviceHelper) {
+    private final FileManagerService fileManagerService;
+
+    public FileService(AppProperties appProperties, ServiceHelper serviceHelper, FileManagerService fileManagerService) {
         this.appProperties = appProperties;
         this.serviceHelper = serviceHelper;
+        this.fileManagerService = fileManagerService;
         Init();
     }
 
@@ -63,6 +63,7 @@ public class FileService {
             }
             String newFilename = UUIDUtils.getUUIDFilenameBySuffix(fileType);
             Files.copy(file.getInputStream(), getFilesDirPath().resolve(newFilename));
+            fileManagerService.newFile(newFilename);
             return newFilename;
         } catch (IOException ex) {
             String errMsg = "获取文件格式或存储文件失败！";
@@ -76,9 +77,24 @@ public class FileService {
         String newFilename = UUIDUtils.getUUIDFilename(filename);
         try {
             Files.copy(file.getInputStream(), getFilesDirPath().resolve(newFilename));
+            fileManagerService.newFile(newFilename);
             return newFilename;
         } catch (IOException ex) {
             String errMsg = "存储文件失败！";
+            serviceHelper.handleException(logger, ex, errMsg);
+            throw new ServiceException(errMsg, ex);
+        }
+    }
+
+    public void delete(String filename){
+        Path filePath = getFilesDirPath().resolve(filename);
+        if (!Files.exists(filePath)){
+            throw new ServiceException(String.format("删除文件失败，无法找到文件%s。",filename));
+        }
+        try {
+            Files.delete(filePath);
+        } catch (IOException ex) {
+            String errMsg = "删除文件失败！";
             serviceHelper.handleException(logger, ex, errMsg);
             throw new ServiceException(errMsg, ex);
         }

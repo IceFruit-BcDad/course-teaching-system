@@ -20,5 +20,5 @@ public class AppProperties {
     @NotNull
     private String fileSavePath;
 
-    private String[] supportImgType = new String[]{"jpg", "png"};
+    private String[] supportImgType = new String[]{"jpg", "jpeg", "png"};
 }

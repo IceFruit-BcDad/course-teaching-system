@@ -1,13 +1,12 @@
 package com.icefruit.courseteachingsystem.contoller;
 
 import com.icefruit.courseteachingsystem.api.DataResponse;
+import com.icefruit.courseteachingsystem.api.Response;
 import com.icefruit.courseteachingsystem.auth.AuthConstant;
 import com.icefruit.courseteachingsystem.auth.Authorize;
+import com.icefruit.courseteachingsystem.service.FileManagerService;
 import com.icefruit.courseteachingsystem.service.FileService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -18,8 +17,11 @@ public class FileController {
 
     private final FileService fileService;
 
-    public FileController(FileService fileService) {
+    private final FileManagerService fileManagerService;
+
+    public FileController(FileService fileService, FileManagerService fileManagerService) {
         this.fileService = fileService;
+        this.fileManagerService = fileManagerService;
     }
 
     @PostMapping("/uploadImg")
@@ -42,5 +44,11 @@ public class FileController {
     public DataResponse<String> upload(@RequestParam("file") MultipartFile file) {
         String filename = fileService.saveFile(file);
         return new DataResponse<>(filename);
+    }
+
+    @GetMapping("/useFile/{filename}")
+    public Response testUseFile(@PathVariable String filename){
+        fileManagerService.useFile(filename);
+        return new Response();
     }
 }
