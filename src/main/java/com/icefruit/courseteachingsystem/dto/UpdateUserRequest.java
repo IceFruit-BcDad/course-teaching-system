@@ -12,7 +12,7 @@ import org.springframework.util.StringUtils;
 @NoArgsConstructor
 @Builder
 public class UpdateUserRequest {
-    private Long typeId;
+    private Byte type;
 
     private String phoneNumber;
 
@@ -22,7 +22,7 @@ public class UpdateUserRequest {
 
     @AssertTrue(message = "请求无效，更新用户信息时必须有一个属性不为空！")
     private boolean isValidRequest() {
-        return typeId != null || StringUtils.hasText(phoneNumber) || StringUtils.hasText(name) ||
+        return type != null || StringUtils.hasText(phoneNumber) || StringUtils.hasText(name) ||
                 StringUtils.hasText(password);
     }
 }

@@ -8,7 +8,6 @@ import com.icefruit.courseteachingsystem.dto.UserDto;
 import com.icefruit.courseteachingsystem.error.ServiceException;
 import com.icefruit.courseteachingsystem.model.User;
 import com.icefruit.courseteachingsystem.repository.UserRepository;
-import com.icefruit.courseteachingsystem.repository.UserTypeRepository;
 import com.icefruit.courseteachingsystem.service.helper.ServiceHelper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -30,8 +29,6 @@ public class UserService {
     static ILogger logger = SLoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
-
-    private final UserTypeRepository userTypeRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -64,13 +61,13 @@ public class UserService {
                 .build();
     }
 
-    public UserDto create(long typeId, String phoneNumber, String name, String password){
+    public UserDto create(Byte type, String phoneNumber, String name, String password){
         int count = userRepository.countByPhoneNumber(phoneNumber);
         if (count > 0){
             throw new ServiceException(String.format("手机号：%1s已被注册，请勿重复注册使用！", name));
         }
         User user = User.builder()
-                .typeId(typeId)
+                .type(type)
                 .phoneNumber(phoneNumber)
                 .name(name)
                 .passwordHash(passwordEncoder.encode(password))
@@ -105,13 +102,13 @@ public class UserService {
         return convertToDto(user);
     }
 
-    public UserDto update(long id, Long typeId, String phoneNumber, String name, String password){
+    public UserDto update(long id, Byte type, String phoneNumber, String name, String password){
         final User user = userRepository.findById(id);
         if (user == null){
             throw new com.icefruit.courseteachingsystem.error.ServiceException(ResultCode.NOT_FOUND, "未找到此id的用户。");
         }
-        if (typeId != null){
-            user.setTypeId(typeId);
+        if (type != null){
+            user.setType(type);
         }
         if (phoneNumber != null){
             user.setPhoneNumber(phoneNumber);
@@ -140,8 +137,6 @@ public class UserService {
 
 
     private UserDto convertToDto(User user) {
-        UserDto dto = modelMapper.map(user, UserDto.class);
-        userTypeRepository.findById(user.getTypeId()).ifPresent(userType -> dto.setTypeName(userType.getName()));
-        return dto;
+        return modelMapper.map(user, UserDto.class);
     }
 }

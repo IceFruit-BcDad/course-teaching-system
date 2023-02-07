@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
 
@@ -28,9 +29,9 @@ public class User {
     private String passwordHash;
 
     /**
-     * 用户类型Id
+     * 用户类型
      */
-    private long typeId;
+    private int type;
 
     private Instant createTime;
 }

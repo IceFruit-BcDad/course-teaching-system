@@ -16,7 +16,7 @@ import org.springframework.util.StringUtils;
 @Builder
 public class CreateUserRequest {
     @NotNull
-    private Long typeId;
+    private Byte type;
 
     @PhoneNumber
     private String phoneNumber;
@@ -29,7 +29,7 @@ public class CreateUserRequest {
 
     @AssertTrue(message = "无效请求，所以参数都不能为空！")
     private boolean isValidRequest() {
-        return typeId != null && StringUtils.hasText(phoneNumber) &&
+        return type != null && StringUtils.hasText(phoneNumber) &&
                 StringUtils.hasText(name) && StringUtils.hasText(password);
     }
 }

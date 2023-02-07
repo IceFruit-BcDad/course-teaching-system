@@ -25,14 +25,7 @@ CREATE TABLE IF NOT EXISTS user
     name          VARCHAR(255)          NULL,
     phone_number  VARCHAR(255)          NULL,
     password_hash VARCHAR(255)          NULL,
-    type_id       BIGINT                NOT NULL,
+    type          INT               NOT NULL,
     create_time   datetime              NULL,
     CONSTRAINT pk_user PRIMARY KEY (id)
-);
-
-CREATE TABLE IF NOT EXISTS user_type
-(
-    id   BIGINT AUTO_INCREMENT NOT NULL,
-    name VARCHAR(255)          NULL,
-    CONSTRAINT pk_usertype PRIMARY KEY (id)
 );

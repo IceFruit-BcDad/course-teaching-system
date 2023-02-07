@@ -24,9 +24,9 @@ public class UserDto {
     private String phoneNumber;
 
     /**
-     * 用户类型Id
+     * 用户类型
      */
-    private long typeId;
+    private int type;
 
     @NotNull
     private String typeName;

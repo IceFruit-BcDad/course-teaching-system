@@ -9,6 +9,7 @@ import com.icefruit.courseteachingsystem.dto.UserDto;
 import com.icefruit.courseteachingsystem.dto.VerifyPasswordRequest;
 import com.icefruit.courseteachingsystem.env.EnvConfig;
 import com.icefruit.courseteachingsystem.service.UserService;
+import com.icefruit.courseteachingsystem.utils.UserUtils;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +39,7 @@ public class LoginController {
                                        HttpServletResponse response){
         final UserDto userDto = userService.verifyPassword(request.getPhoneNumber(), request.getPassword());
         Sessions.loginUser(userDto.getId(),
-                false,
+                UserUtils.isSupport(userDto.getType()),
                 true,
                 appProperties.getSigningSecret(),
                 envConfig.getExternalApex(),

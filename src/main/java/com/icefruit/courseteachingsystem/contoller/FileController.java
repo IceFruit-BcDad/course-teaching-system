@@ -26,7 +26,6 @@ public class FileController {
 
     @PostMapping("/uploadImg")
     @Authorize(value = {
-            AuthConstant.AUTHORIZATION_ANONYMOUS_WEB,
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
             AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
     })
@@ -37,7 +36,6 @@ public class FileController {
 
     @PostMapping("/upload")
     @Authorize(value = {
-            AuthConstant.AUTHORIZATION_ANONYMOUS_WEB,
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
             AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER
     })

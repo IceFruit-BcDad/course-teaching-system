@@ -53,7 +53,7 @@ public class UserController {
             AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
     })
     public DataResponse<UserDto> create(@RequestBody @Valid CreateUserRequest request){
-        UserDto userDto = userService.create(request.getTypeId(), request.getPhoneNumber(),
+        UserDto userDto = userService.create(request.getType(), request.getPhoneNumber(),
                 request.getName(), request.getPassword());
         return new DataResponse<>(userDto);
     }
@@ -74,7 +74,7 @@ public class UserController {
     })
     public DataResponse<UserDto> update(@PathVariable long id,
                                           @RequestBody @Valid UpdateUserRequest request){
-        final UserDto userDto = userService.update(id, request.getTypeId(),
+        final UserDto userDto = userService.update(id, request.getType(),
                 request.getPhoneNumber(), request.getName(), request.getPassword());
         return new DataResponse<>(userDto);
     }
