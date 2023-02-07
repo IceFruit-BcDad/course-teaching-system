@@ -39,7 +39,7 @@ public class LoginController {
                                        HttpServletResponse response){
         final UserDto userDto = userService.verifyPassword(request.getPhoneNumber(), request.getPassword());
         Sessions.loginUser(userDto.getId(),
-                UserUtils.isSupport(userDto.getType()),
+                userDto.getType(),
                 true,
                 appProperties.getSigningSecret(),
                 envConfig.getExternalApex(),

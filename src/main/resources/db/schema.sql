@@ -29,3 +29,15 @@ CREATE TABLE IF NOT EXISTS user
     create_time   datetime              NULL,
     CONSTRAINT pk_user PRIMARY KEY (id)
 );
+
+CREATE TABLE IF NOT EXISTS chapter
+(
+    id               BIGINT AUTO_INCREMENT NOT NULL,
+    course_id        BIGINT                NOT NULL,
+    parent_id        BIGINT                NULL,
+    title            VARCHAR(255)          NOT NULL,
+    content_url      VARCHAR(255)          NOT NULL,
+    create_time      datetime              NOT NULL,
+    last_modify_time datetime              NOT NULL,
+    CONSTRAINT pk_chapter PRIMARY KEY (id)
+);

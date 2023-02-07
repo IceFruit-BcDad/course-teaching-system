@@ -9,6 +9,7 @@ import com.icefruit.courseteachingsystem.core.CustomHttpServletRequest;
 import com.icefruit.courseteachingsystem.core.http.RequestData;
 import com.icefruit.courseteachingsystem.crypto.Sign;
 import com.icefruit.courseteachingsystem.error.ServiceException;
+import com.icefruit.courseteachingsystem.utils.UserUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,8 +48,10 @@ public class AuthRequestInterceptor implements PreForwardRequestInterceptor {
 //        HttpHeaders headers = data.getHeaders();
         Session session = this.getSession(data.getOriginRequest());
         if (session != null) {
-            if (session.isSupport()) {
+            if (UserUtils.isSupport(session.getUserType())) {
                 authorization = AuthConstant.AUTHORIZATION_SUPPORT_USER;
+            } else if (UserUtils.isAdministrator(session.getUserType())){
+                authorization = AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER;
             } else {
                 authorization = AuthConstant.AUTHORIZATION_AUTHENTICATED_USER;
             }
@@ -80,9 +83,8 @@ public class AuthRequestInterceptor implements PreForwardRequestInterceptor {
         try {
             DecodedJWT decodedJWT = Sign.verifySessionToken(token, signingSecret);
             String userId = decodedJWT.getClaim(Sign.CLAIM_USER_ID).asString();
-            boolean support = decodedJWT.getClaim(Sign.CLAIM_SUPPORT).asBoolean();
-            Session session = Session.builder().userId(userId).support(support).build();
-            return session;
+            int userType = decodedJWT.getClaim(Sign.CLAIM_USER_TYPE).asInt();
+            return Session.builder().userId(userId).userType(userType).build();
         } catch (Exception e) {
             log.error("fail to verify token", "token", token, e);
             return null;
@@ -95,6 +97,6 @@ public class AuthRequestInterceptor implements PreForwardRequestInterceptor {
     @NoArgsConstructor
     private static class Session {
         private String userId;
-        private boolean support;
+        private int userType;
     }
 }

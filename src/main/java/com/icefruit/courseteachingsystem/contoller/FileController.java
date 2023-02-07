@@ -6,6 +6,7 @@ import com.icefruit.courseteachingsystem.auth.AuthConstant;
 import com.icefruit.courseteachingsystem.auth.Authorize;
 import com.icefruit.courseteachingsystem.service.FileManagerService;
 import com.icefruit.courseteachingsystem.service.FileService;
+import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,11 +18,9 @@ public class FileController {
 
     private final FileService fileService;
 
-    private final FileManagerService fileManagerService;
 
-    public FileController(FileService fileService, FileManagerService fileManagerService) {
+    public FileController(FileService fileService) {
         this.fileService = fileService;
-        this.fileManagerService = fileManagerService;
     }
 
     @PostMapping("/uploadImg")
@@ -42,11 +41,5 @@ public class FileController {
     public DataResponse<String> upload(@RequestParam("file") MultipartFile file) {
         String filename = fileService.saveFile(file);
         return new DataResponse<>(filename);
-    }
-
-    @GetMapping("/useFile/{filename}")
-    public Response testUseFile(@PathVariable String filename){
-        fileManagerService.useFile(filename);
-        return new Response();
     }
 }

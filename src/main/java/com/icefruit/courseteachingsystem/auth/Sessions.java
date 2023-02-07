@@ -14,7 +14,7 @@ public class Sessions {
     public static final long LONG_SESSION = TimeUnit.HOURS.toMillis(30 * 24);
 
     public static void loginUser(long userId,
-                                 boolean support,
+                                 int userType,
                                  boolean rememberMe,
                                  String signingSecret,
                                  String externalApex,
@@ -30,7 +30,7 @@ public class Sessions {
         }
         maxAge = (int) (duration / 1000);
 
-        String token = Sign.generateSessionToken(userId, signingSecret, support, duration);
+        String token = Sign.generateSessionToken(userId, signingSecret, userType, duration);
 
         Cookie cookie = new Cookie(AuthConstant.COOKIE_NAME, token);
         cookie.setPath("/");

@@ -14,6 +14,8 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class FileManagerService {
 
+    // 后续添加文件关联表，标识文件使用情况，当没有实体使用时可以彻底删除，不占用硬盘。
+
     private final static ILogger logger = SLoggerFactory.getLogger(FileManagerService.class);
 
     private final StringRedisTemplate stringRedisTemplate;
