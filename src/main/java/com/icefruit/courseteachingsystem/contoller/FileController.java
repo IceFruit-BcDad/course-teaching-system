@@ -1,12 +1,9 @@
 package com.icefruit.courseteachingsystem.contoller;
 
 import com.icefruit.courseteachingsystem.api.DataResponse;
-import com.icefruit.courseteachingsystem.api.Response;
 import com.icefruit.courseteachingsystem.auth.AuthConstant;
 import com.icefruit.courseteachingsystem.auth.Authorize;
-import com.icefruit.courseteachingsystem.service.FileManagerService;
 import com.icefruit.courseteachingsystem.service.FileService;
-import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 

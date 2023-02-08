@@ -1,5 +1,6 @@
 package com.icefruit.courseteachingsystem.api;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

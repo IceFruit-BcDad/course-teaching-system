@@ -25,7 +25,7 @@ public class ChapterService {
 
     private final ChapterRepository chapterRepository;
 
-    private final FileManagerService fileManagerService;
+    private final FileService fileService;
 
     private final ServiceHelper serviceHelper;
 
@@ -92,9 +92,9 @@ public class ChapterService {
                 .createTime(now)
                 .lastModifyTime(now)
                 .build();
-        fileManagerService.useFile(contentUrl);
         try {
-            chapterRepository.save(chapter);
+            chapter = chapterRepository.save(chapter);
+            fileService.useFile(contentUrl, Chapter.class, chapter.getId());
         } catch (Exception ex){
             String errMsg = "创建章节失败";
             serviceHelper.handleException(logger, ex, errMsg);
@@ -105,19 +105,19 @@ public class ChapterService {
     }
 
     public ChapterDto update(long id, Long parentId, String title, String contentUrl){
-        final Chapter chapter = chapterRepository.findById(id);
+        Chapter chapter = chapterRepository.findById(id);
         if (chapter == null){
             throw new ServiceException(ResultCode.NOT_FOUND, "未找到此id的章节。");
         }
         chapter.setParentId(parentId);
         chapter.setTitle(title);
         chapter.setContentUrl(contentUrl);
-        if (StringUtils.hasText(contentUrl)){
-            fileManagerService.useFile(contentUrl);
-        }
 
         try {
-            chapterRepository.save(chapter);
+            chapter = chapterRepository.save(chapter);
+            if (StringUtils.hasText(contentUrl)){
+                fileService.useFile(contentUrl, Chapter.class, chapter.getId());
+            }
         } catch (Exception ex){
             String errMsg = "更新章节失败";
             serviceHelper.handleException(logger, ex, errMsg);
@@ -128,7 +128,12 @@ public class ChapterService {
     }
 
     public void delete(long id){
+        Chapter chapter = chapterRepository.findById(id);
+        if (chapter == null){
+            throw new ServiceException(ResultCode.NOT_FOUND, "未找到此id的章节。");
+        }
         chapterRepository.deleteById(id);
+        fileService.cancelUseFile(chapter.getContentUrl(), Chapter.class, chapter.getId());
     }
 
     private ChapterDto convertToDto(Chapter chapter){

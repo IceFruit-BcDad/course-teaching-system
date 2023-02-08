@@ -41,3 +41,13 @@ CREATE TABLE IF NOT EXISTS chapter
     last_modify_time datetime              NOT NULL,
     CONSTRAINT pk_chapter PRIMARY KEY (id)
 );
+
+CREATE TABLE IF NOT EXISTS file
+(
+    id               VARCHAR(255) NOT NULL,
+    filename              VARCHAR(255) NOT NULL,
+    used             VARCHAR(255) NULL,
+    create_time      datetime     NOT NULL,
+    last_modify_time datetime     NOT NULL,
+    CONSTRAINT pk_file PRIMARY KEY (id)
+);
