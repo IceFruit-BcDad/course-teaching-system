@@ -41,6 +41,7 @@ public class ClassificationController {
 
     @PostMapping
     @Authorize(value = {
+            AuthConstant.AUTHORIZATION_ANONYMOUS_WEB,
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
             AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
     })
@@ -63,6 +64,7 @@ public class ClassificationController {
 
     @PutMapping("/{id}")
     @Authorize(value = {
+            AuthConstant.AUTHORIZATION_ANONYMOUS_WEB,
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
             AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
     })

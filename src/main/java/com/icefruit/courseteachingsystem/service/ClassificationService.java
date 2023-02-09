@@ -57,6 +57,8 @@ public class ClassificationService {
         List<Classification> level2ClassificationList = classificationRepository.findClassificationsByLevel(2);
         for (Classification level1Classification :
                 level1ClassificationList) {
+            ClassificationDto classificationDto = convertToDto(level1Classification);
+            list.add(classificationDto);
             List<ClassificationDto> children = level2ClassificationList
                     .stream()
                     .filter(item -> item.getParentId() == level1Classification.getId())
@@ -65,9 +67,7 @@ public class ClassificationService {
             if (children.size() == 0){
                 continue;
             }
-            ClassificationDto classificationDto = convertToDto(level1Classification);
             classificationDto.setChildren(children);
-            list.add(classificationDto);
         }
         return DtoList.<ClassificationDto>builder()
                 .total(list.size())
