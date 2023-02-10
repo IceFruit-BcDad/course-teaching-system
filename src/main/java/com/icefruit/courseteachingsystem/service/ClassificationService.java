@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -115,8 +116,19 @@ public class ClassificationService {
         return convertToDto(classification);
     }
 
-    public void delete(long id){
-        classificationRepository.deleteById(id);
+    public void delete(String content){
+        List<Long> ids = stream(content.split(",")).filter(this::isLong).map(item -> Long.parseLong(item)).toList();
+
+        classificationRepository.deleteAllById(ids);
+    }
+
+    private boolean isLong(String value){
+        try {
+            Long.parseLong(value);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
     }
 
     public ClassificationDto get(long id){

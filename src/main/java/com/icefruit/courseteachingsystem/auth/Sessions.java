@@ -38,6 +38,13 @@ public class Sessions {
         cookie.setMaxAge(maxAge);
         cookie.setHttpOnly(true);
         response.addCookie(cookie);
+
+        Cookie userIdCookie = new Cookie(AuthConstant.USER_ID_COOKIE_NAME, String.valueOf(userId));
+        userIdCookie.setPath("/");
+        userIdCookie.setDomain(externalApex);
+        userIdCookie.setMaxAge(maxAge);
+        userIdCookie.setHttpOnly(false);
+        response.addCookie(userIdCookie);
     }
 
     public static String getToken(HttpServletRequest request) {
@@ -56,5 +63,11 @@ public class Sessions {
         cookie.setMaxAge(0);
         cookie.setDomain(externalApex);
         response.addCookie(cookie);
+
+        Cookie userIdCookie = new Cookie(AuthConstant.USER_ID_COOKIE_NAME, "");
+        userIdCookie.setPath("/");
+        userIdCookie.setMaxAge(0);
+        userIdCookie.setDomain(externalApex);
+        response.addCookie(userIdCookie);
     }
 }

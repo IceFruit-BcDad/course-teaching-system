@@ -14,6 +14,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static java.util.Arrays.stream;
+
 
 @RestController
 @RequestMapping("/api/classification")
@@ -41,7 +46,7 @@ public class ClassificationController {
 
     @PostMapping
     @Authorize(value = {
-            AuthConstant.AUTHORIZATION_ANONYMOUS_WEB,
+//            AuthConstant.AUTHORIZATION_ANONYMOUS_WEB,
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
             AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
     })
@@ -64,7 +69,7 @@ public class ClassificationController {
 
     @PutMapping("/{id}")
     @Authorize(value = {
-            AuthConstant.AUTHORIZATION_ANONYMOUS_WEB,
+//            AuthConstant.AUTHORIZATION_ANONYMOUS_WEB,
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
             AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
     })
@@ -75,13 +80,13 @@ public class ClassificationController {
         return new DataResponse<>(classificationDto);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{ids}")
     @Authorize(value = {
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
             AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
     })
-    public Response delete(@PathVariable long id){
-        classificationService.delete(id);
+    public Response delete(@PathVariable String ids){
+        classificationService.delete(ids);
         return new Response();
     }
 }
