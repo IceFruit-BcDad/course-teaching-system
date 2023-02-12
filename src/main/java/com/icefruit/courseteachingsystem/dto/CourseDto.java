@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -25,7 +26,7 @@ public class CourseDto {
     private long createUserId;
 
     @NotBlank
-    private String CreateUserName;
+    private String createUserName;
 
     @NotNull
     private Instant createTime;
@@ -34,4 +35,6 @@ public class CourseDto {
     private Instant lastModifyTime;
 
     private String coverUrl;
+
+    private List<ChapterDto> chapters;
 }

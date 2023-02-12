@@ -14,4 +14,7 @@ public interface ClassificationRepository extends JpaRepository<Classification, 
     List<Classification> findClassificationsByLevel(int level);
 
     int countByName(String name);
+
+    int deleteAllByParentIdIn(Iterable<Long> parentIds);
+
 }
