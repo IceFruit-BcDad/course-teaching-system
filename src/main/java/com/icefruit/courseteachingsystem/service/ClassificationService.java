@@ -117,8 +117,7 @@ public class ClassificationService {
     }
 
     public void delete(String content){
-        List<Long> ids = stream(content.split(",")).filter(this::isLong).map(item -> Long.parseLong(item)).toList();
-
+        List<Long> ids = stream(content.split(",")).filter(this::isLong).map(Long::parseLong).toList();
         classificationRepository.deleteAllById(ids);
     }
 
