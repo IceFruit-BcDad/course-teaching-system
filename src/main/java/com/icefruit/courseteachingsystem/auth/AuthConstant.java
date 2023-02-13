@@ -2,8 +2,6 @@ package com.icefruit.courseteachingsystem.auth;
 
 public class AuthConstant {
 
-    public static final String USER_ID_COOKIE_NAME = "user-id";
-
     public static final String COOKIE_NAME = "icefruit-gateway";
     // header set for internal user id
     public static final String CURRENT_USER_HEADER = "icefruit-current-user-id";

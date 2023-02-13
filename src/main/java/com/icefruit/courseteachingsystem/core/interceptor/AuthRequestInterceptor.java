@@ -27,8 +27,8 @@ public class AuthRequestInterceptor implements PreForwardRequestInterceptor {
 
     // Use a map for constant time lookups. Value doesn't matter
     // Hypothuetically these shold be universally unique, so we don't have to limit by env
-    private final Map<String, String> bannedUsers = new HashMap<String, String>() {{
-        put("d7b9dbed-9719-4856-5f19-23da2d0e3dec", "hidden");
+    private final Map<Long, String> bannedUsers = new HashMap<Long, String>() {{
+        put(12321L, "hidden");
     }};
 
     public AuthRequestInterceptor(String signingSecret) {
@@ -57,7 +57,8 @@ public class AuthRequestInterceptor implements PreForwardRequestInterceptor {
             }
 
             this.checkBannedUsers(session.getUserId());
-            data.getOriginRequest().setHeader(AuthConstant.CURRENT_USER_HEADER, session.getUserId());
+            data.getOriginRequest().setHeader(AuthConstant.CURRENT_USER_HEADER,
+                    String.valueOf(session.getUserId()));
 //            headers.set(AuthConstant.CURRENT_USER_HEADER, session.getUserId());
         } else {
             // prevent hacking
@@ -70,7 +71,7 @@ public class AuthRequestInterceptor implements PreForwardRequestInterceptor {
         return authorization;
     }
 
-    private void checkBannedUsers(String userId) {
+    private void checkBannedUsers(long userId) {
         if (bannedUsers.containsKey(userId)) {
             log.warn(String.format("Banned user accessing service - user %s", userId));
             throw new ServiceException("Banned user forbidden!");
@@ -82,7 +83,7 @@ public class AuthRequestInterceptor implements PreForwardRequestInterceptor {
         if (token == null) return null;
         try {
             DecodedJWT decodedJWT = Sign.verifySessionToken(token, signingSecret);
-            String userId = decodedJWT.getClaim(Sign.CLAIM_USER_ID).asString();
+            long userId = decodedJWT.getClaim(Sign.CLAIM_USER_ID).asLong();
             int userType = decodedJWT.getClaim(Sign.CLAIM_USER_TYPE).asInt();
             return Session.builder().userId(userId).userType(userType).build();
         } catch (Exception e) {
@@ -96,7 +97,7 @@ public class AuthRequestInterceptor implements PreForwardRequestInterceptor {
     @AllArgsConstructor
     @NoArgsConstructor
     private static class Session {
-        private String userId;
+        private long userId;
         private int userType;
     }
 }

@@ -149,6 +149,7 @@ public class FileService {
         }
         String used = file.getUsed();
         if (!StringUtils.hasText(used)){
+            delete(filename);
             return;
         }
         used = used.replace(cancelUse, "");

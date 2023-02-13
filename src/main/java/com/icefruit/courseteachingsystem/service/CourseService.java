@@ -5,6 +5,7 @@ import com.github.structlog4j.SLoggerFactory;
 import com.icefruit.courseteachingsystem.api.DtoList;
 import com.icefruit.courseteachingsystem.api.ResultCode;
 import com.icefruit.courseteachingsystem.auth.AuthContext;
+import com.icefruit.courseteachingsystem.dto.ClassificationDto;
 import com.icefruit.courseteachingsystem.dto.CourseDto;
 import com.icefruit.courseteachingsystem.error.ServiceException;
 import com.icefruit.courseteachingsystem.model.Course;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.Instant;
 import java.util.List;
@@ -28,6 +30,12 @@ public class CourseService {
     static ILogger logger = SLoggerFactory.getLogger(CourseService.class);
 
     private final CourseRepository courseRepository;
+
+    private final ClassificationService classificationService;
+
+    private final ChapterService chapterService;
+
+    private final FileService fileService;
 
     private final ModelMapper modelMapper;
 
@@ -51,6 +59,7 @@ public class CourseService {
                 .build();
         try {
             courseRepository.save(course);
+            fileService.useFile(coverUrl, Course.class, course.getId());
         } catch (Exception ex){
             String errMsg = "无法创建课程";
             serviceHelper.handleException(logger, ex, errMsg);
@@ -82,6 +91,7 @@ public class CourseService {
         if (course == null){
             throw new com.icefruit.courseteachingsystem.error.ServiceException(ResultCode.NOT_FOUND, "未找到此id的课程。");
         }
+        String oldCoverUrl = course.getCoverUrl();
         if (classificationId != null){
             course.setClassificationId(classificationId);
         }
@@ -94,29 +104,46 @@ public class CourseService {
         course.setLastModifyTime(Instant.now());
         try {
             courseRepository.save(course);
+            if (StringUtils.hasText(coverUrl)){
+                fileService.useFile(coverUrl, Course.class, course.getId());
+                if (StringUtils.hasText(oldCoverUrl)){
+                    fileService.cancelUseFile(oldCoverUrl, Course.class, course.getId());
+                }
+            }
         } catch (Exception ex){
             String errMsg = "更新课程失败";
             serviceHelper.handleException(logger, ex, errMsg);
-            throw new com.icefruit.courseteachingsystem.error.ServiceException(errMsg, ex);
+            throw new ServiceException(errMsg, ex);
         }
 
         return convertToDto(course);
     }
 
     public void delete(long id){
+        Course course = courseRepository.findById(id);
+        if (course == null){
+            throw new ServiceException(ResultCode.NOT_FOUND, "未找到此id的课程。");
+        }
         courseRepository.deleteById(id);
+        fileService.cancelUseFile(course.getCoverUrl(), Course.class, course.getId());
+        chapterService.deleteByCourseId(id);
     }
 
     public CourseDto get(long id){
         final Course course = courseRepository.findById(id);
         if (course == null){
-            throw new com.icefruit.courseteachingsystem.error.ServiceException(ResultCode.NOT_FOUND, "未找到此id的课程。");
+            throw new ServiceException(ResultCode.NOT_FOUND, "未找到此id的课程。");
         }
         return convertToDto(course);
     }
 
 
     private CourseDto convertToDto(Course course) {
-        return modelMapper.map(course, CourseDto.class);
+        CourseDto courseDto = modelMapper.map(course, CourseDto.class);
+        ClassificationDto classificationDto = classificationService.get(course.getClassificationId());
+        if (classificationDto != null){
+            courseDto.setClassificationName(classificationDto.getName());
+        }
+        return courseDto;
     }
 }

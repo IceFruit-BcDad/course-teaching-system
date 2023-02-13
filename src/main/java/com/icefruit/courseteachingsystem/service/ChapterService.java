@@ -109,6 +109,7 @@ public class ChapterService {
         if (chapter == null){
             throw new ServiceException(ResultCode.NOT_FOUND, "未找到此id的章节。");
         }
+        String oldContentUrl = chapter.getContentUrl();
         chapter.setParentId(parentId);
         chapter.setTitle(title);
         chapter.setContentUrl(contentUrl);
@@ -117,6 +118,9 @@ public class ChapterService {
             chapter = chapterRepository.save(chapter);
             if (StringUtils.hasText(contentUrl)){
                 fileService.useFile(contentUrl, Chapter.class, chapter.getId());
+            }
+            if (StringUtils.hasText(oldContentUrl)){
+                fileService.cancelUseFile(contentUrl, Chapter.class, chapter.getId());
             }
         } catch (Exception ex){
             String errMsg = "更新章节失败";
@@ -134,6 +138,15 @@ public class ChapterService {
         }
         chapterRepository.deleteById(id);
         fileService.cancelUseFile(chapter.getContentUrl(), Chapter.class, chapter.getId());
+    }
+
+    public void deleteByCourseId(long courseId){
+        List<Chapter> chapterList = chapterRepository.findAllByCourseId(courseId);
+        for (Chapter chapter:
+             chapterList) {
+            chapterRepository.deleteById(chapter.getId());
+            fileService.cancelUseFile(chapter.getContentUrl(), Chapter.class, chapter.getId());
+        }
     }
 
     private ChapterDto convertToDto(Chapter chapter){

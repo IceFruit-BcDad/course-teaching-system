@@ -39,7 +39,7 @@ public class Sessions {
         cookie.setHttpOnly(true);
         response.addCookie(cookie);
 
-        Cookie userIdCookie = new Cookie(AuthConstant.USER_ID_COOKIE_NAME, String.valueOf(userId));
+        Cookie userIdCookie = new Cookie(AuthConstant.CURRENT_USER_HEADER, String.valueOf(userId));
         userIdCookie.setPath("/");
         userIdCookie.setDomain(externalApex);
         userIdCookie.setMaxAge(maxAge);
@@ -64,7 +64,7 @@ public class Sessions {
         cookie.setDomain(externalApex);
         response.addCookie(cookie);
 
-        Cookie userIdCookie = new Cookie(AuthConstant.USER_ID_COOKIE_NAME, "");
+        Cookie userIdCookie = new Cookie(AuthConstant.CURRENT_USER_HEADER, "");
         userIdCookie.setPath("/");
         userIdCookie.setMaxAge(0);
         userIdCookie.setDomain(externalApex);
