@@ -69,12 +69,17 @@ public class CourseService {
         return convertToDto(course);
     }
 
-    public DtoList<CourseDto> list(int offset, int limit){
+    public DtoList<CourseDto> list(int offset, int limit, Long classificationId){
         if (limit <= 0) {
             limit = 10;
         }
         Pageable pageRequest = PageRequest.of(offset, limit);
-        Page<Course> coursePage = courseRepository.findAll(pageRequest);
+        Page<Course> coursePage;
+        if (classificationId == null){
+            coursePage = courseRepository.findAll(pageRequest);
+        } else {
+            coursePage = courseRepository.findAllByClassificationId(classificationId, pageRequest);
+        }
         List<CourseDto> courseDtoList = coursePage.getContent().stream().map(this::convertToDto).collect(toList());
 
         return DtoList.<CourseDto>builder()

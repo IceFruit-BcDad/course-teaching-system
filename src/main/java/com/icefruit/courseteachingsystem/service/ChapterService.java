@@ -112,15 +112,19 @@ public class ChapterService {
         String oldContentUrl = chapter.getContentUrl();
         chapter.setParentId(parentId);
         chapter.setTitle(title);
-        chapter.setContentUrl(contentUrl);
+        boolean isChangeContentUrl = false;
+        if (StringUtils.hasLength(contentUrl) && !contentUrl.equals(oldContentUrl)){
+            chapter.setContentUrl(contentUrl);
+            isChangeContentUrl = true;
+        }
 
         try {
             chapter = chapterRepository.save(chapter);
-            if (StringUtils.hasText(contentUrl)){
+            if (isChangeContentUrl){
                 fileService.useFile(contentUrl, Chapter.class, chapter.getId());
-            }
-            if (StringUtils.hasText(oldContentUrl)){
-                fileService.cancelUseFile(contentUrl, Chapter.class, chapter.getId());
+                if (StringUtils.hasText(oldContentUrl)){
+                    fileService.cancelUseFile(contentUrl, Chapter.class, chapter.getId());
+                }
             }
         } catch (Exception ex){
             String errMsg = "更新章节失败";

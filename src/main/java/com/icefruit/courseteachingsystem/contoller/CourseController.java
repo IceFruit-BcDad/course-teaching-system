@@ -12,6 +12,7 @@ import com.icefruit.courseteachingsystem.dto.CourseDto;
 import com.icefruit.courseteachingsystem.dto.CreateCourseRequest;
 import com.icefruit.courseteachingsystem.dto.UpdateCourseRequest;
 import com.icefruit.courseteachingsystem.service.CourseService;
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.web.bind.annotation.*;
@@ -34,8 +35,9 @@ public class CourseController {
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
             AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
     })
-    public ListResponse<CourseDto> getCourses(@RequestParam int offset, @RequestParam @Min(0) int limit){
-        DtoList<CourseDto> list = courseService.list(offset, limit);
+    public ListResponse<CourseDto> getCourses(@RequestParam int offset, @RequestParam @Min(0) int limit,
+                                              @RequestParam @Nullable Long classificationId){
+        DtoList<CourseDto> list = courseService.list(offset, limit, classificationId);
         return new ListResponse<>(list);
 
     }

@@ -25,11 +25,17 @@ public class CreateOrUpdateChapterRequest {
 
     @AssertTrue(message = "无效请求，新建章节时除父章节id外都不为空!")
     private boolean isValidRequestCreate() {
-        return chapterId == null && courseId != null && StringUtils.hasText(title) && StringUtils.hasText(contentUrl);
+        if (chapterId == null){
+            return courseId != null && StringUtils.hasText(title) && StringUtils.hasText(contentUrl);
+        }
+        return true;
     }
 
     @AssertTrue(message = "无效请求，更新章节时只需要title或contentUrl有个不为空即可!")
     private boolean isValidRequestUpdate() {
-        return chapterId != null && (StringUtils.hasText(title) || StringUtils.hasText(contentUrl));
+        if (chapterId != null){
+            return StringUtils.hasText(title) || StringUtils.hasText(contentUrl);
+        }
+        return true;
     }
 }
