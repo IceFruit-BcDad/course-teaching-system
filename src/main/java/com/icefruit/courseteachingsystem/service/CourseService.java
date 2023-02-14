@@ -7,6 +7,7 @@ import com.icefruit.courseteachingsystem.api.ResultCode;
 import com.icefruit.courseteachingsystem.auth.AuthContext;
 import com.icefruit.courseteachingsystem.dto.ClassificationDto;
 import com.icefruit.courseteachingsystem.dto.CourseDto;
+import com.icefruit.courseteachingsystem.dto.UserDto;
 import com.icefruit.courseteachingsystem.error.ServiceException;
 import com.icefruit.courseteachingsystem.model.Course;
 import com.icefruit.courseteachingsystem.repository.CourseRepository;
@@ -32,6 +33,8 @@ public class CourseService {
     private final CourseRepository courseRepository;
 
     private final ClassificationService classificationService;
+
+    private final UserService userService;
 
     private final ChapterService chapterService;
 
@@ -146,9 +149,9 @@ public class CourseService {
     private CourseDto convertToDto(Course course) {
         CourseDto courseDto = modelMapper.map(course, CourseDto.class);
         ClassificationDto classificationDto = classificationService.get(course.getClassificationId());
-        if (classificationDto != null){
-            courseDto.setClassificationName(classificationDto.getName());
-        }
+        courseDto.setClassificationName(classificationDto.getName());
+        UserDto userDto = userService.get(course.getCreateUserId());
+        courseDto.setCreateUserName(userDto.getName());
         return courseDto;
     }
 }
