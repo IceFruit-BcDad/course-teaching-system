@@ -28,8 +28,7 @@ public class UserController {
 
     @GetMapping
     @Authorize(value = {
-            AuthConstant.AUTHORIZATION_SUPPORT_USER,
-            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+            AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER,
     })
     public ListResponse<UserDto> getUsers(@RequestParam int offset, @RequestParam @Min(0) int limit){
         DtoList<UserDto> list = userService.list(offset, limit);
@@ -39,8 +38,9 @@ public class UserController {
 
     @GetMapping("/{userId}")
     @Authorize(value = {
-            AuthConstant.AUTHORIZATION_SUPPORT_USER,
-            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+            AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER,
+            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER,
+            AuthConstant.AUTHORIZATION_SUPPORT_USER
     })
     public DataResponse<UserDto> getUser(@PathVariable long userId){
         final UserDto userDto = userService.get(userId);
@@ -49,9 +49,7 @@ public class UserController {
 
     @PostMapping
     @Authorize(value = {
-            AuthConstant.AUTHORIZATION_ANONYMOUS_WEB,
-            AuthConstant.AUTHORIZATION_SUPPORT_USER,
-            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+            AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER,
     })
     public DataResponse<UserDto> create(@RequestBody @Valid CreateUserRequest request){
         UserDto userDto = userService.create(request.getType(), request.getPhoneNumber(),
@@ -61,6 +59,7 @@ public class UserController {
 
     @PostMapping("/verify_password")
     @Authorize(value = {
+            AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER,
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
             AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
     })
@@ -71,8 +70,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     @Authorize(value = {
-            AuthConstant.AUTHORIZATION_SUPPORT_USER,
-            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+            AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER,
     })
     public DataResponse<UserDto> update(@PathVariable long id,
                                           @RequestBody @Valid UpdateUserRequest request){
@@ -83,8 +81,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @Authorize(value = {
-            AuthConstant.AUTHORIZATION_SUPPORT_USER,
-            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+            AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER,
     })
     public Response delete(@PathVariable long id){
         userService.delete(id);

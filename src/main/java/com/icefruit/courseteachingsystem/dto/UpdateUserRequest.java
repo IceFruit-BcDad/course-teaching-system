@@ -12,7 +12,7 @@ import org.springframework.util.StringUtils;
 @NoArgsConstructor
 @Builder
 public class UpdateUserRequest {
-    private Byte type;
+    private Integer type;
 
     private String phoneNumber;
 

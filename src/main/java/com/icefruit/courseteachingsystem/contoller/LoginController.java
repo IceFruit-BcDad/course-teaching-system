@@ -33,7 +33,9 @@ public class LoginController {
     @PostMapping
     @Authorize(value = {
             AuthConstant.AUTHORIZATION_ANONYMOUS_WEB,
-            AuthConstant.AUTHORIZATION_SUPPORT_USER
+            AuthConstant.AUTHORIZATION_SUPPORT_USER,
+            AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER,
+            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER,
     })
     public DataResponse<UserDto> login(@RequestBody @Valid VerifyPasswordRequest request,
                                        HttpServletResponse response){

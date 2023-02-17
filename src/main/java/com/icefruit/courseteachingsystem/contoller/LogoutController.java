@@ -22,7 +22,8 @@ public class LogoutController {
     @RequestMapping
     @Authorize(value = {
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
-            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER,
+            AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER,
     })
     public Response logout(HttpServletResponse response){
         Sessions.logout(envConfig.getExternalApex(), response);

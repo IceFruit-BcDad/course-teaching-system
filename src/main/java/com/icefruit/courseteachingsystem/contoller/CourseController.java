@@ -33,6 +33,7 @@ public class CourseController {
     @Authorize(value = {
             AuthConstant.AUTHORIZATION_ANONYMOUS_WEB,
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
+            AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER,
             AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
     })
     public ListResponse<CourseDto> getCourses(@RequestParam int offset, @RequestParam @Min(0) int limit,
@@ -45,7 +46,7 @@ public class CourseController {
     @PostMapping
     @Authorize(value = {
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
-            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+            AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER
     })
     public DataResponse<CourseDto> create(@RequestBody @Valid CreateCourseRequest request){
         CourseDto courseDto = courseService.create(request.getClassificationId(),
@@ -57,6 +58,7 @@ public class CourseController {
     @Authorize(value = {
             AuthConstant.AUTHORIZATION_ANONYMOUS_WEB,
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
+            AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER,
             AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
     })
     public DataResponse<CourseDto> get(@PathVariable long id){
@@ -67,7 +69,7 @@ public class CourseController {
     @PutMapping("/{id}")
     @Authorize(value = {
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
-            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+            AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER
     })
     public DataResponse<CourseDto> update(@PathVariable long id,
                                                   @RequestBody @Valid UpdateCourseRequest request){
@@ -79,7 +81,7 @@ public class CourseController {
     @DeleteMapping("/{id}")
     @Authorize(value = {
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
-            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+            AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER
     })
     public Response delete(@PathVariable long id){
         courseService.delete(id);

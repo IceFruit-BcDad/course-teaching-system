@@ -16,7 +16,7 @@ import org.springframework.util.StringUtils;
 @Builder
 public class CreateUserRequest {
     @NotNull
-    private Byte type;
+    private Integer type;
 
     @PhoneNumber
     private String phoneNumber;

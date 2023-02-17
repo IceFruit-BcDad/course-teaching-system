@@ -36,7 +36,8 @@ public class ClassificationController {
     @Authorize(value = {
             AuthConstant.AUTHORIZATION_ANONYMOUS_WEB,
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
-            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER,
+            AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER
     })
     public ListResponse<ClassificationDto> getClassifications(){
         DtoList<ClassificationDto> list = classificationService.list();
@@ -46,9 +47,7 @@ public class ClassificationController {
 
     @PostMapping
     @Authorize(value = {
-//            AuthConstant.AUTHORIZATION_ANONYMOUS_WEB,
-            AuthConstant.AUTHORIZATION_SUPPORT_USER,
-            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+            AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER,
     })
     public DataResponse<ClassificationDto> create(@RequestBody @Valid CreateOrUpdateClassificationRequest request){
         ClassificationDto classificationDto = classificationService.create(request.getLevel(),
@@ -60,6 +59,7 @@ public class ClassificationController {
     @Authorize(value = {
             AuthConstant.AUTHORIZATION_ANONYMOUS_WEB,
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
+            AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER,
             AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
     })
     public DataResponse<ClassificationDto> get(@PathVariable long id){
@@ -69,9 +69,7 @@ public class ClassificationController {
 
     @PutMapping("/{id}")
     @Authorize(value = {
-//            AuthConstant.AUTHORIZATION_ANONYMOUS_WEB,
-            AuthConstant.AUTHORIZATION_SUPPORT_USER,
-            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+            AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER,
     })
     public DataResponse<ClassificationDto> update(@PathVariable long id,
                                                   @RequestBody @Valid CreateOrUpdateClassificationRequest request){
@@ -82,8 +80,7 @@ public class ClassificationController {
 
     @DeleteMapping("/{ids}")
     @Authorize(value = {
-            AuthConstant.AUTHORIZATION_SUPPORT_USER,
-            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+            AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER,
     })
     public Response delete(@PathVariable String ids){
         classificationService.delete(ids);

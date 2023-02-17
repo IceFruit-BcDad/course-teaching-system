@@ -61,7 +61,7 @@ public class UserService {
                 .build();
     }
 
-    public UserDto create(Byte type, String phoneNumber, String name, String password){
+    public UserDto create(Integer type, String phoneNumber, String name, String password){
         int count = userRepository.countByPhoneNumber(phoneNumber);
         if (count > 0){
             throw new ServiceException(String.format("手机号：%1s已被注册，请勿重复注册使用！", name));
@@ -102,7 +102,7 @@ public class UserService {
         return convertToDto(user);
     }
 
-    public UserDto update(long id, Byte type, String phoneNumber, String name, String password){
+    public UserDto update(long id, Integer type, String phoneNumber, String name, String password){
         final User user = userRepository.findById(id);
         if (user == null){
             throw new com.icefruit.courseteachingsystem.error.ServiceException(ResultCode.NOT_FOUND, "未找到此id的用户。");

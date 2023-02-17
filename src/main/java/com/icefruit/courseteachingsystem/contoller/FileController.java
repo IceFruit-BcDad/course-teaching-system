@@ -23,7 +23,7 @@ public class FileController {
     @PostMapping("/uploadImg")
     @Authorize(value = {
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
-            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+            AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER
     })
     public DataResponse<String> uploadImg(@RequestParam MultipartFile file) {
         String filename = fileService.saveImgFile(file);

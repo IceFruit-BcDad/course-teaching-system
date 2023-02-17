@@ -25,6 +25,7 @@ public class ChapterController {
     @GetMapping
     @Authorize(value = {
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
+            AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER,
             AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
     })
     public ListResponse<ChapterDto> getChapters(@RequestParam long courseId){
@@ -36,7 +37,7 @@ public class ChapterController {
     @PostMapping
     @Authorize(value = {
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
-            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+            AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER
     })
     public DataResponse<ChapterDto> create(@RequestBody @Valid CreateOrUpdateChapterRequest request){
         ChapterDto chapterDto = chapterService.create(request.getCourseId(),
@@ -48,6 +49,7 @@ public class ChapterController {
     @Authorize(value = {
             AuthConstant.AUTHORIZATION_ANONYMOUS_WEB,
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
+            AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER,
             AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
     })
     public DataResponse<ChapterDto> get(@PathVariable long id){
@@ -58,7 +60,7 @@ public class ChapterController {
     @PutMapping
     @Authorize(value = {
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
-            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+            AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER
     })
     public DataResponse<ChapterDto> update(@RequestBody @Valid CreateOrUpdateChapterRequest request){
         final ChapterDto chapterDto = chapterService.update(request.getChapterId(), request.getParentId(),
@@ -69,7 +71,7 @@ public class ChapterController {
     @DeleteMapping("/{id}")
     @Authorize(value = {
             AuthConstant.AUTHORIZATION_SUPPORT_USER,
-            AuthConstant.AUTHORIZATION_AUTHENTICATED_USER
+            AuthConstant.AUTHORIZATION_ADMINISTRATOR_USER
     })
     public Response delete(@PathVariable long id){
         chapterService.delete(id);
